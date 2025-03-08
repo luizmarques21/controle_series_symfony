@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Series;
 use App\Repository\SeriesRepository;
-use phpDocumentor\Reflection\DocBlock\Tags\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +26,13 @@ class SeriesController extends AbstractController
         ]);
     }
 
-    #[Route('/series/create', methods: ['GET'])]
+    #[Route('/series/create', name: 'app_series_form', methods: ['GET'])]
     public function addSeriesForm(): Response
     {
         return $this->render('series/form.html.twig');
     }
 
-    #[Route('/series/create', methods: ['POST'])]
+    #[Route('/series/create', name: 'app_add_series', methods: ['POST'])]
     public function addSeries(Request $request): Response
     {
         $seriesName = $request->request->get('name');
