@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SeriesController!{% endblock %}
+{% block title %}Listagem de Series{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +9,13 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Listagem de séries</h1>
 
-    This friendly message is coming from:
+    <a href="/series/create">Adicionar</a>
     <ul>
-        <li>Your controller at <code><a href="{{ 'D:/workspace/data/apache/controle_series_symfony/src/Controller/SeriesController.php'|file_link(0) }}">src/Controller/SeriesController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'D:/workspace/data/apache/controle_series_symfony/templates/series/index.html.twig'|file_link(0) }}">templates/series/index.html.twig</a></code></li>
+        {% for series in seriesList %}
+            <li>{{ series }}</li>
+        {% endfor %}
     </ul>
 </div>
 {% endblock %}
