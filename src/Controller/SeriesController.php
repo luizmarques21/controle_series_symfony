@@ -14,7 +14,9 @@ class SeriesController extends AbstractController
 {
     public function __construct(
         private SeriesRepository $seriesRepository,
-    ) {}
+    )
+    {
+    }
 
     #[Route('/series', name: 'app_series', methods: ['GET'])]
     public function index(): Response
@@ -39,6 +41,19 @@ class SeriesController extends AbstractController
         $series = new Series($seriesName);
 
         $this->seriesRepository->add($series, true);
+        return new RedirectResponse('/series');
+    }
+
+    #[Route(
+        '/series/delete/{id}',
+        name: 'app_delete_series',
+        requirements: ['id' => '[0-9]+'],
+        methods: ['DELETE']
+    )]
+    public function deleteSeries(int $id): Response
+    {
+        $this->seriesRepository->removeById($id);
+
         return new RedirectResponse('/series');
     }
 }
