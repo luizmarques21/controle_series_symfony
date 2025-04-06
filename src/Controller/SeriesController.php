@@ -10,8 +10,6 @@ use App\Form\SeriesType;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,18 +56,10 @@ class SeriesController extends AbstractController
             return $this->renderForm('series/form.html.twig', compact('seriesForm'));
         }
 
-        $series = new Series($input->seriesName);
-        for ($i = 1; $i <= $input->seasonsQuantity; $i ++) {
-            $season = new Season($i);
-            for ($j = 1; $j <= $input->episodesPerSeason; $j ++) {
-                $season->addEpisode(new Episode($j));
-            }
-            $series->addSeason($season);
-        }
+        $series = $this->seriesRepository->add($input);
 
         $this->addFlash('success', "Série \"{$series->getName()}\" adicionada com sucesso");
 
-        $this->seriesRepository->add($series, true);
         return new RedirectResponse('/series');
     }
 
