@@ -5,12 +5,16 @@
 {% endblock %}
 
 {% block body %}
-<ul class="list-group">
-    {% for season in seasons %}
-        <li class="list-group-item">
-            Temporada {{ season.number }}
-            <span class="badge bg-secondary">{{ season.episodes|length }}</span>
-        </li>
-    {% endfor %}
-</ul>
+    <ul class="list-group">
+        {% for season in seasons %}
+            <li class="list-group-item">
+                <a href="{{ path('app_episodes', {season: season.id}) }}">
+                    Temporada {{ season.number }}
+                </a>
+                <span class="badge bg-secondary">
+                    {{ season.watchedEpisodes|length }} / {{ season.episodes|length }}
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
