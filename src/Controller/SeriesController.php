@@ -3,19 +3,16 @@
 namespace App\Controller;
 
 use App\DTO\SeriesCreateFormInput;
-use App\Entity\Episode;
-use App\Entity\Season;
 use App\Entity\Series;
 use App\Form\SeriesType;
+use App\Message\SeriesWasCreated;
 use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SeriesController extends AbstractController
@@ -23,7 +20,7 @@ class SeriesController extends AbstractController
     public function __construct(
         private SeriesRepository       $seriesRepository,
         private EntityManagerInterface $entityManager,
-        private MailerInterface $mailer
+        private MessageBusInterface $messenger
     )
     {
     }
@@ -59,18 +56,9 @@ class SeriesController extends AbstractController
         if (!$seriesForm->isValid()) {
             return $this->renderForm('series/form.html.twig', compact('seriesForm'));
         }
-        $user = $this->getUser();
 
         $series = $this->seriesRepository->add($input);
-        $email = (new TemplatedEmail())
-            ->from('sistema@example.com')
-            ->to($user->getUserIdentifier())
-            ->subject('Nova série criada')
-            ->text("Série {$series->getName()} foi criada")
-            ->htmlTemplate('emails/series-created.html.twig')
-            ->context(compact('series'));
-
-        $this->mailer->send($email);
+        $this->messenger->dispatch(new SeriesWasCreated($series));
 
         $this->addFlash('success', "Série \"{$series->getName()}\" adicionada com sucesso");
 
