@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\DTO\SeriesCreateFormInput;
+use App\DTO\SeriesCreationInputDTO;
 use App\Entity\Series;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,11 +26,11 @@ class SeriesRepository extends ServiceEntityRepository
         parent::__construct($registry, Series::class);
     }
 
-    public function add(SeriesCreateFormInput $input): Series
+    public function add(SeriesCreationInputDTO $input): Series
     {
         $entityManager = $this->getEntityManager();
 
-        $series = new Series($input->seriesName);
+        $series = new Series($input->seriesName, $input->coverImage);
         $entityManager->persist($series);
         $entityManager->flush();
 

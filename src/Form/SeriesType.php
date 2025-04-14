@@ -2,12 +2,14 @@
 
 namespace App\Form;
 
-use App\DTO\SeriesCreateFormInput;
+use App\DTO\SeriesCreationInputDTO;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class SeriesType extends AbstractType
 {
@@ -18,6 +20,18 @@ class SeriesType extends AbstractType
             ->add('seasonsQuantity', NumberType::class, options: ['label' => 'Qtd Temporadas:'])
             ->add('episodesPerSeason', NumberType::class, options: ['label' => 'Ep por Temporada:'])
             ->add('save', SubmitType::class, ['label' => $options['is_edit'] ? 'Editar' : 'Adicionar'])
+            ->add(
+                'coverImage',
+                FileType::class,
+                [
+                    'label' => 'Imagem de capa',
+                    'mapped' => false,
+                    'required' => false,
+                    'constraints' => [
+                        new File(mimeTypes: 'image/*')
+                    ]
+                ]
+            )
             ->setMethod($options['is_edit'] ? 'PATCH' : 'POST');
 //            ->setAction($options['is_edit'] ? 'app_store_series_changes' : 'app_add_series');
     }
@@ -25,7 +39,7 @@ class SeriesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => SeriesCreateFormInput::class,
+            'data_class' => SeriesCreationInputDTO::class,
             'is_edit' => false
         ]);
 
