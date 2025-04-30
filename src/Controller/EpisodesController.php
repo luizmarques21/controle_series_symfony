@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Season;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,6 +38,6 @@ class EpisodesController extends AbstractController
         $this->entityManager->flush();
         $this->addFlash('success', 'Episodios marcados como assistidos');
 
-        return new RedirectResponse("/season/{$season->getId()}/episodes");
+        return $this->redirectToRoute('app_episodes', ['season' => $season->getId()]);
     }
 }

@@ -12,7 +12,6 @@ use App\Repository\SeriesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -93,7 +92,7 @@ class SeriesController extends AbstractController
         $this->messenger->dispatch(new SeriesWasDeleted($series));
         $this->addFlash('success', $this->translator->trans('series.delete'));
 
-        return new RedirectResponse('/en/series');
+        return $this->redirectToRoute('app_series');
     }
 
     #[Route('/series/edit/{series}', name: 'app_edit_series_form', methods: ['GET'])]
@@ -116,6 +115,6 @@ class SeriesController extends AbstractController
         $this->addFlash('success', "Série \"{$series->getName()}\" editada com sucesso");
         $this->entityManager->flush();
 
-        return new RedirectResponse('/series');
+        return $this->redirectToRoute('app_series');
     }
 }
