@@ -1,0 +1,3 @@
+series.list: Listagem de séries
+series.delete: Série removida com sucesso
+series.added.msg: Série {name} adicionada com sucesso

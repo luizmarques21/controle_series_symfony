@@ -3,20 +3,33 @@
 namespace App\EventListener;
 
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 #[AsEventListener(event: 'kernel.exception')]
 class ExceptionEventListener
 {
     public function __invoke(ExceptionEvent $event)
     {
-        $errorMessage = $event->getThrowable()->getMessage();
+        $error = $event->getThrowable();
+        if (!$error instanceof NotFoundHttpException) {
+            return;
+        }
 
-        $response = new Response();
-        $response->setContent($errorMessage);
-        $response->setStatusCode(501);
+        $request = $event->getRequest();
+        $this->startsWithValidLanguage($request);
+    }
 
-        $event->setResponse($response);
+    public function startsWithValidLanguage(Request $request): bool
+    {
+        $validLanguages = ['en', 'pt_BR'];
+        foreach ($validLanguages as $language) {
+            if (str_starts_with($request->getPathInfo(), "/$language")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

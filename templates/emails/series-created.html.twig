@@ -9,6 +9,6 @@
 </head>
 <body>
 <h1>Série criada</h1>
-<p>Série "{{ series.name }}" foi criada</p>
+<p>{{ 'series.added.msg'|trans({'name': series.name}) }}</p>
 </body>
 </html>
